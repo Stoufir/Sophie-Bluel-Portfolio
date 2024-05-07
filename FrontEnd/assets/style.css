@@ -125,6 +125,31 @@ li:hover {
 	text-align: center;
 	margin-bottom: 1em;
 }
+
+.filters{
+	display: flex;
+	justify-content: center;
+	margin-bottom: 3em;
+
+}
+.filters button {
+	border-radius: 60px;
+	border: #1D6154 1px solid;
+	background-color: transparent;
+	font-family: 'Syne';
+	color: #1D6154;
+	font-weight: bold;
+	font-size: 16px;
+	padding: 8px 16px;
+	margin: 4px;
+	cursor: pointer;
+}
+
+.filters .active-button {
+	background-color: #1D6154;
+	color: white;
+}
+
 .gallery {
 	width: 100%;
 	display: grid;
