@@ -98,6 +98,7 @@ nav li {
 li:hover {
 	color: #B1663C;
 }
+
 #introduction {
 	display: flex;
 	align-items: center;
@@ -124,6 +125,10 @@ li:hover {
 #portfolio h2 {
 	text-align: center;
 	margin-bottom: 1em;
+}
+
+nav .active {
+	font-weight: bold;
 }
 
 .filters{
@@ -211,3 +216,80 @@ footer nav ul {
 	margin: 2em
 }
 
+/***** Login *****/
+
+.login form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 40px;
+}
+
+.login label {
+	align-self: flex-start;
+	padding-top: 2em;
+	padding-bottom: 1em;
+}
+
+.login input[type="email"],
+input[type="password"] {
+	width: 379px;
+	height: 51px;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	border: none;
+	font-size: 30px;
+}
+
+.login input[type="submit"] {
+	width: 178px;
+	height: 36px;
+	border: none;
+}
+
+.login {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.login a {
+	text-decoration: none;
+	color: #3D3D3D;
+}
+
+.login a:hover {
+	text-decoration: underline;
+}
+
+ul li a {
+	text-decoration: none;
+	color: inherit;
+}
+
+form p {
+	padding: 15px;
+	color: red;
+	font-weight: bold;
+	margin: 10px;
+}
+
+.projectTitle {
+	display: flex;
+	justify-content: center;
+}
+
+
+.projectTitle a {
+	text-decoration: none;
+	color: inherit;
+}
+
+.modifyButton {
+	display: flex;
+	justify-content: space-between;
+	padding: 15px;
+	gap: 10px;
+	background-color: transparent;
+	border: none;
+	font-family: 'Work Sans';
+}
