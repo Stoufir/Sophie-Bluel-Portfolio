@@ -3,6 +3,8 @@
 const url = "http://localhost:5678/";
 const gallery = document.querySelector(".gallery");
 const filters = document.querySelector(".filters");
+const loginLink = document.querySelector('a[href="Login.html"]');
+const modifyButton = document.querySelector(".modifyButton")
 
 /* Récupération des travaux */
 
@@ -91,3 +93,33 @@ async function filterByCategory() {
 }
 
 filterByCategory();
+
+// Fonction pour vérifier si l'utilisateur est authentifié */
+function estAuthentifie() {
+    return localStorage.getItem('authentifie') === 'true' || localStorage.getItem('authentifie') === 'false';
+}
+
+/* Fonction pour déconnecter l'utilisateur */
+
+async function disconnection(event) {
+  localStorage.removeItem("authentifie");
+  localStorage.removeItem("token");
+  loginLink.textContent ="login";
+  loginLink.removeEventListener("click", disconnection);
+}
+
+// Vérifier si l'utilisateur est authentifié lors du chargement de la page
+window.addEventListener('load', function() {
+    if (estAuthentifie()) {
+        // Utilisateur authentifié
+        console.log('L\'utilisateur est authentifié.');
+        loginLink.textContent= "logout";
+        loginLink.addEventListener("click", disconnection)
+        modifyButton.style.display = "flex"
+    } else {
+        // Utilisateur déconnecté
+        console.log('L\'utilisateur est déconnecté.');
+        loginLink.textContent= "login";
+        modifyButton.style.display = "none"
+    }
+});
