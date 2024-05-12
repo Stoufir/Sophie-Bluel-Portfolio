@@ -23,6 +23,12 @@ async function displayWorks() {
   });
 }
 
+async function UpdateWorks() {
+  gallery.innerHTML = "";
+  displayWorks();
+}
+
+
 function createWork(work) {
   const figure = document.createElement("figure");
   const img = document.createElement("img");
@@ -123,3 +129,9 @@ window.addEventListener('load', function() {
         modifyButton.style.display = "none"
     }
 });
+
+/*window.addEventListener('beforeunload', function(event) {
+
+  localStorage.removeItem('token');
+  localStorage.removeItem('authentifie');
+});*/
