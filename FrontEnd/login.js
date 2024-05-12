@@ -31,7 +31,7 @@ async function getUsers() {
 })
 .then(data => {
     localStorage.setItem('token', data.token);
-    localStorage.setItem('authentifie', 'true')
+    localStorage.setItem('authentifie', 'true');
     window.location.href = 'index.html';
 })
 
