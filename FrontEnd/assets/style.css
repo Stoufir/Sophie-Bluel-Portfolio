@@ -425,7 +425,7 @@ ul li a {
 	align-items: center;
 }
 
-.CloseModal {
+.closeModal {
 	background-color: transparent;
 	border: none;
 	align-self: flex-end;
@@ -476,7 +476,7 @@ ul li a {
 	border-top: 1px solid #B3B3B3;
 	height: 1px;
 	width: 420px;
-	margin-top: 50px;
+	margin-top: 20px;
 	margin-bottom: 20px;
 }
 
@@ -595,3 +595,8 @@ ul li a {
 	cursor: pointer;
 }
 
+.errorMessage {
+	color: red;
+	text-align: center;
+	font-weight: bold;
+}

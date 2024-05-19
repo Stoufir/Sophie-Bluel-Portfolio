@@ -19,6 +19,8 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
+    <script defer src="index.js"></script>
+    <script defer src="modal.js"></script>
   </head>
   <body>
     <header>
@@ -73,7 +75,7 @@
           >
             <div class="modal-wrapper js-modal-stop">
               <div class="modalDeleteProject">
-                <button class="CloseModal">
+                <button class="closeModal">
                   <i class="fa-solid fa-x"></i>
                 </button>
                 <h2 id="titlemodal">Galerie photo</h2>
@@ -84,7 +86,7 @@
               <div class="modalAddProject">
                 <div class="title">
                   <i class="fa-solid fa-arrow-left"></i>
-                  <button class="CloseModal">
+                  <button class="closeModal">
                     <i class="fa-solid fa-x"></i>
                   </button>
                 </div>
@@ -101,6 +103,7 @@
                   <input type="text" id="title" name="title" />
                   <label for="category">Catégorie</label>
                   <select name="category" id="category"></select>
+                  <p class="errorMessage"></p>
                   <hr>
                   <button class="validateButton">Valider</button>
                 </form>
@@ -133,7 +136,5 @@
         </ul>
       </nav>
     </footer>
-    <script src="index.js"></script>
-    <script src="modal.js"></script>
   </body>
 </html>

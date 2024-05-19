@@ -1,15 +1,14 @@
 let modal = null;
 
 document.addEventListener("DOMContentLoaded", function () {
-  var closeButtons = document.querySelectorAll(".CloseModal");
+  var closeButtons = document.querySelectorAll(".closeModal");
   closeButtons.forEach(function (button) {
-    button.addEventListener("click", function (e) {
-      closeModal(e);
+    button.addEventListener("click", function () {
+      closeModal();
     });
   });
 });
 
-const focusableSelector = "button, a,";
 
 const openModal = function (e) {
   e.preventDefault();
@@ -18,15 +17,14 @@ const openModal = function (e) {
   modal.removeAttribute("aria-hidden");
   modal.setAttribute("aria-modal", "true");
   modal.addEventListener("click", closeModal);
-  modal
-    .querySelector(".js-modal-stop")
-    .addEventListener("click", stopPropagation);
+  modal.querySelector(".js-modal-stop").addEventListener("click", stopPropagation);
+    modalAddProject.style.display = "none";
+    modalDeleteProject.style.display= "flex";
     displayModalProjects();
 };
 
-const closeModal = function (e) {
+const closeModal = function () {
   if (modal === null) return;
-  e.preventDefault();
   modal.style.display = "none";
   modal.setAttribute("aria-hidden", "true");
   modal.removeAttribute("aria-modal");
@@ -36,6 +34,7 @@ const closeModal = function (e) {
     .removeEventListener("click", stopPropagation);
   modal = null;
   resetAddProjectModal();
+  submitButton.classList.remove("active");
 };
 
 const stopPropagation = function (e) {
@@ -44,11 +43,6 @@ const stopPropagation = function (e) {
 
 modifyButton.addEventListener("click", openModal);
 
-window.addEventListener("keydown", function (e) {
-  if (e.key === "Tab" && modal !== null) {
-    focusInModal(e);
-  }
-});
 
 function displayModalProjects() {
   const gallery = document.querySelector(".modal-gallery");
@@ -109,11 +103,8 @@ function deleteProject() {
       };
       fetch("http://localhost:5678/api/works/" + id, init)
         .then((response) => {
-          if (!response.ok) {
-            console.log("le delete n'a pas marché");
-          } 
           trash.parentElement.remove();
-          UpdateWorks();
+          displayGalleryWorks();
         })
     });
   });
@@ -153,7 +144,6 @@ const inputText = document.getElementById("title")
 
 inputFile.addEventListener("change", ()=> {
   const file = inputFile.files[0]
-  console.log(file);
   if (file) {
     const reader = new FileReader();
     reader.onload = function (e){
@@ -173,7 +163,9 @@ function resetAddProjectModal() {
   labelFile.style.display = "flex";
   iconFile.style.display = "flex";
   pFile.style.display ="flex";
-  inputText.value = ""
+  inputText.value = "";
+  inputFile.value = "";
+  addErrorMessage.textContent="";
 }
 
 
@@ -200,6 +192,23 @@ displayCategoryModal()
 const form = document.querySelector(".modalAddProject form");
 const title = document.querySelector(".modalAddProject #title");
 const category = document.querySelector(".modalAddProject #category");
+const submitButton = document.querySelector(".validateButton")
+const addErrorMessage = document.querySelector(".modalAddProject .errorMessage")
+
+// Fonction pour vérifier si le formulaire est complet
+function isFormComplete() {
+  return title.value.trim() !== "" && category.value.trim() !== "" && inputFile.files.length > 0;
+}
+
+// Événement change pour les champs du formulaire
+form.addEventListener("change", () => {
+  if (isFormComplete()) {
+    submitButton.classList.add("active");
+    addErrorMessage.textContent="";
+  } else {
+    submitButton.classList.remove("active");
+  }
+});
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -213,16 +222,18 @@ form.addEventListener("submit", async (e) => {
   })
     .then((response) => {
       if (!response.ok) {
+        addErrorMessage.textContent="Veuillez remplir tous les champs du formulaire."
         throw new Error("La requête a échoué : " + response.status);
       }
+      addErrorMessage.textContent="";
       return response.json();
     })
     .then((data) => {
-      console.log(data);
-      UpdateWorks();
-      resetAddProjectModal();
+      displayGalleryWorks();
+      closeModal();
     })
     .catch((error) => {
       console.error("Une erreur est survenue lors de l'envoi du formulaire :", error);
     });
 });
+
