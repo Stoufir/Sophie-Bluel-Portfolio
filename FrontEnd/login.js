@@ -3,7 +3,7 @@ const url = "http://localhost:5678/";
 const emailInput = document.querySelector("form #email");
 const passwordInput = document.querySelector("form #password");
 const form = document.querySelector(".login form");
-const errorMessage = document.querySelector(".login p");
+const loginErrorMessage = document.querySelector(".login p");
 
 
 
@@ -37,7 +37,7 @@ async function getUsers() {
 
 .catch (error => {
     console.error(error);
-    errorMessage.textContent="Erreur dans l’identifiant ou le mot de passe"
+    loginErrorMessage.textContent="Erreur dans l’identifiant ou le mot de passe."
 })
 
 }

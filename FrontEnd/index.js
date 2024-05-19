@@ -4,7 +4,9 @@ const url = "http://localhost:5678/";
 const gallery = document.querySelector(".gallery");
 const filters = document.querySelector(".filters");
 const loginLink = document.querySelector('a[href="Login.html"]');
-const modifyButton = document.querySelector(".modifyButton")
+const modifyButton = document.querySelector(".modifyButton");
+const filterButtons = document.querySelectorAll (".filters button")
+let activeFilterButton = 0;
 
 /* Récupération des travaux */
 
@@ -12,35 +14,46 @@ async function getWorks() {
   const response = await fetch(url + "api/works");
   return await response.json();
 }
-getWorks();
 
 /* Affichage des travaux dans le DOM */
 
-async function displayWorks() {
+function cleanWorksGallery() {
+  gallery.innerHTML = "";
+}
+
+async function displayGalleryWorks() {
   const arrayWorks = await getWorks();
+  if (!arrayWorks) {
+    console.error('Erreur lors de la récupération des travaux.');
+    return;
+  }
+  cleanWorksGallery();
   arrayWorks.forEach((work) => {
-    createWork(work);
+    if (activeFilterButton === 0 || work.categoryId === activeFilterButton) {
+      createWork(work);
+
+    }
   });
 }
 
-async function UpdateWorks() {
-  gallery.innerHTML = "";
-  displayWorks();
-}
+displayGalleryWorks();
 
+/* Créer un travail */
 
 function createWork(work) {
   const figure = document.createElement("figure");
   const img = document.createElement("img");
-  img.src = work.imageUrl;
-  figure.appendChild(img);
   const figcaption = document.createElement("figcaption");
+
+  img.src = work.imageUrl;
+  img.alt = work.title;
   figcaption.textContent = work.title;
+
+  figure.appendChild(img); 
   figure.appendChild(figcaption);
   gallery.appendChild(figure);
 }
 
-displayWorks();
 
 /*****  Affichage des boutons par catégorie *****/
 
@@ -77,31 +90,29 @@ async function filterByCategory() {
   const buttons = document.querySelectorAll(".filters button");
   buttons.forEach((button) => {
     button.addEventListener("click", async (e) => {
-      buttonId = e.target.id;
-      gallery.innerHTML = "";
+      let buttonId = e.target.id;
       buttons.forEach((btn) => {
         btn.classList.remove("active-button");
       });
+      e.target.classList.add("active-button");
       if (buttonId !== "0") {
-        e.target.classList.add("active-button");
-        const workByCategory = works.filter((work) => {
-          return work.categoryId == buttonId;
-        });
-        workByCategory.forEach((work) => {
-          createWork(work);
-        });
+        activeFilterButton = parseInt(buttonId) ;
+        console.log(activeFilterButton);
       } else {
-        e.target.classList.add("active-button");
-        await displayWorks();
+        activeFilterButton = 0;
       }
+      await displayGalleryWorks();
     });
   });
 }
 
 filterByCategory();
 
+
+
 // Fonction pour vérifier si l'utilisateur est authentifié */
-function estAuthentifie() {
+
+function isAuthenticated() {
     return localStorage.getItem('authentifie') === 'true' || localStorage.getItem('authentifie') === 'false';
 }
 
@@ -116,22 +127,17 @@ async function disconnection(event) {
 
 // Vérifier si l'utilisateur est authentifié lors du chargement de la page
 window.addEventListener('load', function() {
-    if (estAuthentifie()) {
-        // Utilisateur authentifié
-        console.log('L\'utilisateur est authentifié.');
+    if (isAuthenticated()) {
         loginLink.textContent= "logout";
         loginLink.addEventListener("click", disconnection)
         modifyButton.style.display = "flex"
     } else {
-        // Utilisateur déconnecté
-        console.log('L\'utilisateur est déconnecté.');
         loginLink.textContent= "login";
         modifyButton.style.display = "none"
     }
 });
 
-/*window.addEventListener('beforeunload', function(event) {
-
+window.addEventListener('beforeunload', function(event) {
   localStorage.removeItem('token');
   localStorage.removeItem('authentifie');
-});*/
+});
