@@ -97,7 +97,6 @@ async function filterByCategory() {
       e.target.classList.add("active-button");
       if (buttonId !== "0") {
         activeFilterButton = parseInt(buttonId) ;
-        console.log(activeFilterButton);
       } else {
         activeFilterButton = 0;
       }

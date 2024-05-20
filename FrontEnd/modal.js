@@ -1,4 +1,5 @@
 let modal = null;
+const modalGallery = document.querySelector(".modal-gallery");
 
 document.addEventListener("DOMContentLoaded", function () {
   var closeButtons = document.querySelectorAll(".closeModal");
@@ -18,9 +19,9 @@ const openModal = function (e) {
   modal.setAttribute("aria-modal", "true");
   modal.addEventListener("click", closeModal);
   modal.querySelector(".js-modal-stop").addEventListener("click", stopPropagation);
-    modalAddProject.style.display = "none";
-    modalDeleteProject.style.display= "flex";
-    displayModalProjects();
+  modalAddProject.style.display = "none";
+  modalDeleteProject.style.display= "flex";
+  displayModalProjects();
 };
 
 const closeModal = function () {
@@ -34,7 +35,6 @@ const closeModal = function () {
     .removeEventListener("click", stopPropagation);
   modal = null;
   resetAddProjectModal();
-  submitButton.classList.remove("active");
 };
 
 const stopPropagation = function (e) {
@@ -44,49 +44,42 @@ const stopPropagation = function (e) {
 modifyButton.addEventListener("click", openModal);
 
 
-function displayModalProjects() {
-  const gallery = document.querySelector(".modal-gallery");
-  gallery.innerHTML = ""
-  fetchModalProjects();
-
+async function displayModalProjects() {
+  const arrayWorks = await getWorks();
+  if (!arrayWorks) {
+    console.error('Erreur lors de la récupération des travaux.');
+    return;
+  }
+  cleanModalProjects();
+  arrayWorks.forEach((work) => {
+    createModalWork(work);
+    deleteProject();
+  }
+)
 }
 
-function fetchModalProjects() {
-  fetch(url + "api/works/")
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("La requête a échoué : " + response.status);
-      }
-      return response.json();
-    })
-    .then((data) => {
-      const gallery = document.querySelector(".modal-gallery");
-
-      data.forEach((projet) => {
-        const projectContainer = document.createElement("div");
-        projectContainer.classList.add("project-container");
-        const projectImage = document.createElement("img");
-        projectImage.src = projet.imageUrl;
-        const projectButton = document.createElement("button");
-        projectButton.type = "button";
-        projectButton.classList.add("delete-button");
-        const trashIcon = document.createElement("i");
-        trashIcon.classList.add("fa-solid", "fa-trash-can", "trash-icon");
-        projectButton.appendChild(trashIcon);
-        projectContainer.appendChild(projectImage);
-        projectContainer.appendChild(projectButton);
-        projectContainer.setAttribute("id", projet.id);
-        gallery.appendChild(projectContainer);
-      });
-      deleteProject();
-    })
-    .catch((error) => {
-      console.error(
-        "Une erreur est survenue lors de la récupération des données :",
-        error
-      );
-    });
+function cleanModalProjects() {
+  modalGallery.innerHTML = ""
 }
+
+
+function createModalWork(work) {
+  const projectContainer = document.createElement("div");
+  projectContainer.classList.add("project-container");
+  const projectImage = document.createElement("img");
+  projectImage.src = work.imageUrl;
+  const projectButton = document.createElement("button");
+  projectButton.type = "button";
+  projectButton.classList.add("delete-button");
+  const trashIcon = document.createElement("i");
+  trashIcon.classList.add("fa-solid", "fa-trash-can", "trash-icon");
+  projectButton.appendChild(trashIcon);
+  projectContainer.appendChild(projectImage);
+  projectContainer.appendChild(projectButton);
+  projectContainer.setAttribute("id", work.id);
+  modalGallery.appendChild(projectContainer);
+}
+
 
 function deleteProject() {
   const trashAll = document.querySelectorAll(".delete-button");
@@ -166,6 +159,7 @@ function resetAddProjectModal() {
   inputText.value = "";
   inputFile.value = "";
   addErrorMessage.textContent="";
+  submitButton.classList.remove("active");
 }
 
 
