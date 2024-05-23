@@ -53,7 +53,6 @@ async function displayModalProjects() {
   cleanModalProjects();
   arrayWorks.forEach((work) => {
     createModalWork(work);
-    deleteProject();
   }
 )
 }
@@ -78,15 +77,10 @@ function createModalWork(work) {
   projectContainer.appendChild(projectButton);
   projectContainer.setAttribute("id", work.id);
   modalGallery.appendChild(projectContainer);
-}
 
-
-function deleteProject() {
-  const trashAll = document.querySelectorAll(".delete-button");
-  trashAll.forEach((trash) => {
-    trash.addEventListener("click", async (e) => {
-      e.preventDefault();
-      const id = trash.parentElement.getAttribute("id");
+  projectButton.addEventListener("click", async (e) => {
+    e.preventDefault();
+    const id = projectButton.parentElement.getAttribute("id");
       const init = {
         method: "DELETE",
         headers: {
@@ -94,13 +88,12 @@ function deleteProject() {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       };
-      fetch("http://localhost:5678/api/works/" + id, init)
-        .then((response) => {
-          trash.parentElement.remove();
-          displayGalleryWorks();
-        })
-    });
-  });
+      fetch(url + "api/works/" + id, init)
+    .then ((response) => {
+      displayModalProjects();
+      displayGalleryWorks();
+    })
+  })
 }
 
 
