@@ -17,7 +17,7 @@ async function getWorks() {
   return await response.json();
 }
 
-/* Nettoyage de la galerie */
+/* Nettoyer de la galerie */
 
 function cleanWorksGallery() {
   gallery.innerHTML = "";
@@ -38,7 +38,7 @@ function createWork(work) {
   gallery.appendChild(figure);
 }
 
-/* Affichage des travaux dans le DOM */
+/* Afficher les travaux dans le DOM */
 
 async function displayGalleryWorks() {
   const arrayWorks = await getWorks();
@@ -56,20 +56,20 @@ async function displayGalleryWorks() {
 
 /*****  Affichage des boutons par catégorie *****/
 
-/* Récupération des catégories */
+/* Récupérer les catégories */
 
 async function getCategories() {
   const response = await fetch(url + "api/categories");
   return await response.json();
 }
 
-/* Création des boutons de filtre et ajout des écouteurs d'événements */
+/* Créer les boutons de filtre et ajout des écouteurs d'événements */
 async function setupFilters() {
   /* Bouton "Tous" */
   const allBtn = document.createElement("button");
   allBtn.textContent = "Tous";
   allBtn.id = "0";
-  allBtn.classList.add("active-button");
+  allBtn.classList.add("activeButton");
   filters.appendChild(allBtn);
 
   /* Boutons par catégorie */
@@ -87,9 +87,9 @@ async function setupFilters() {
     button.addEventListener("click", async (e) => {
       let buttonId = e.target.id;
       buttons.forEach((btn) => {
-        btn.classList.remove("active-button");
+        btn.classList.remove("activeButton");
       });
-      e.target.classList.add("active-button");
+      e.target.classList.add("activeButton");
       activeFilterButton = buttonId !== "0" ? parseInt(buttonId) : 0;
       await displayGalleryWorks();
     });
@@ -98,7 +98,7 @@ async function setupFilters() {
 
 /*****  Fonctions complémentaires *****/
 
-/* Fonction pour vérifier si l'utilisateur est authentifié */
+/* Vérifier si l'utilisateur est authentifié */
 
 function isAuthenticated() {
   return (
@@ -107,7 +107,7 @@ function isAuthenticated() {
   );
 }
 
-/* Fonction pour déconnecter l'utilisateur */
+/* Déconnecter l'utilisateur */
 
 async function disconnection(event) {
   localStorage.removeItem("authentifie");
@@ -116,19 +116,21 @@ async function disconnection(event) {
   loginLink.removeEventListener("click", disconnection);
 }
 
-/* Fonction pour gérer l'authentification et mettre à jour l'interface utilisateur */
+/* Gérer l'authentification et mettre à jour l'interface utilisateur */
 function handleAuthentication() {
   if (isAuthenticated()) {
     loginLink.textContent = "logout";
     loginLink.addEventListener("click", disconnection);
     modifyButton.style.display = "flex";
+    filters.style.display = "none";
   } else {
     loginLink.textContent = "login";
     modifyButton.style.display = "none";
+    filters.style.display = "flex"
   }
 }
 
-/* Fonction pour intialiser la page Index */
+/* Intialiser la page Index */
 
 async function initIndex() {
   await handleAuthentication();
@@ -140,7 +142,7 @@ async function initIndex() {
 
 window.addEventListener("load", initIndex);
 
-/* Fonction pour supprimer les éléments du localStorage */
+/* Supprimer les éléments du localStorage */
 
 function clearLocalStorage () {
   localStorage.removeItem("token");

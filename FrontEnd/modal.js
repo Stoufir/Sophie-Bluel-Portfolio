@@ -1,16 +1,11 @@
+/* Variables */
+
 let modal = null;
-const modalGallery = document.querySelector(".modal-gallery");
+const modalGallery = document.querySelector(".modalGallery");
 
-document.addEventListener("DOMContentLoaded", function () {
-  var closeButtons = document.querySelectorAll(".closeModal");
-  closeButtons.forEach(function (button) {
-    button.addEventListener("click", function () {
-      closeModal();
-    });
-  });
-});
+/*****  Gestion des modales *****/
 
-
+/* Ouvrir la modale */
 const openModal = function (e) {
   e.preventDefault();
   modal = document.querySelector(e.target.getAttribute("href"));
@@ -18,12 +13,20 @@ const openModal = function (e) {
   modal.removeAttribute("aria-hidden");
   modal.setAttribute("aria-modal", "true");
   modal.addEventListener("click", closeModal);
-  modal.querySelector(".js-modal-stop").addEventListener("click", stopPropagation);
+  modal
+    .querySelector(".js-modal-stop")
+    .addEventListener("click", stopPropagation);
   modalAddProject.style.display = "none";
-  modalDeleteProject.style.display= "flex";
+  modalDeleteProject.style.display = "flex";
   displayModalProjects();
+  initializeCloseButtons();
+  displayCategoryModal();
 };
 
+/* Ajouter l'event openModal au click */
+modifyButton.addEventListener("click", openModal);
+
+/* Fermer la modale */
 const closeModal = function () {
   if (modal === null) return;
   modal.style.display = "none";
@@ -37,41 +40,27 @@ const closeModal = function () {
   resetAddProjectModal();
 };
 
+/* Stopper la propagation */
 const stopPropagation = function (e) {
   e.stopPropagation();
 };
 
-modifyButton.addEventListener("click", openModal);
-
-
-async function displayModalProjects() {
-  const arrayWorks = await getWorks();
-  if (!arrayWorks) {
-    console.error('Erreur lors de la récupération des travaux.');
-    return;
-  }
-  cleanModalProjects();
-  arrayWorks.forEach((work) => {
-    createModalWork(work);
-  }
-)
-}
-
+/* Nettoyer les projets dans la modale */
 function cleanModalProjects() {
-  modalGallery.innerHTML = ""
+  modalGallery.innerHTML = "";
 }
 
-
+/* Créer un projet avec un bouton poubelle */
 function createModalWork(work) {
   const projectContainer = document.createElement("div");
-  projectContainer.classList.add("project-container");
+  projectContainer.classList.add("projectContainer");
   const projectImage = document.createElement("img");
   projectImage.src = work.imageUrl;
   const projectButton = document.createElement("button");
   projectButton.type = "button";
-  projectButton.classList.add("delete-button");
+  projectButton.classList.add("deleteButton");
   const trashIcon = document.createElement("i");
-  trashIcon.classList.add("fa-solid", "fa-trash-can", "trash-icon");
+  trashIcon.classList.add("fa-solid", "fa-trash-can", "trashIcon");
   projectButton.appendChild(trashIcon);
   projectContainer.appendChild(projectImage);
   projectContainer.appendChild(projectButton);
@@ -81,122 +70,152 @@ function createModalWork(work) {
   projectButton.addEventListener("click", async (e) => {
     e.preventDefault();
     const id = projectButton.parentElement.getAttribute("id");
-      const init = {
-        method: "DELETE",
-        headers: {
-          "content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      };
-      fetch(url + "api/works/" + id, init)
-    .then ((response) => {
+    const init = {
+      method: "DELETE",
+      headers: {
+        "content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    };
+    fetch(url + "api/works/" + id, init).then((response) => {
       displayModalProjects();
       displayGalleryWorks();
-    })
-  })
+    });
+  });
 }
 
+/* Afficher les projets dans la modale */
+async function displayModalProjects() {
+  const arrayWorks = await getWorks();
+  if (!arrayWorks) {
+    console.error("Erreur lors de la récupération des travaux.");
+    return;
+  }
+  cleanModalProjects();
+  arrayWorks.forEach((work) => {
+    createModalWork(work);
+  });
+  displayAddModal();
+}
 
-/*** Faire apparaître la deuxième modal ***/
+/* Ajouter l'event closeModal au click */
+function initializeCloseButtons() {
+  const closeButtons = document.querySelectorAll(".closeModal");
+  closeButtons.forEach((button) => {
+    button.removeEventListener("click", closeModal);
+    button.addEventListener("click", closeModal);
+  });
+}
 
-const btnAddModal = document.querySelector(".modalDeleteProject .modal-button")
-const modalDeleteProject = document.querySelector(".modalDeleteProject")
-const modalAddProject = document.querySelector(".modalAddProject")
-const arrowLeft = document.querySelector(".fa-arrow-left")
+/*****  Gestion de la seconde modale *****/
 
+/* Variables */
+
+const btnAddModal = document.querySelector(".modalDeleteProject .modalButton");
+const modalDeleteProject = document.querySelector(".modalDeleteProject");
+const modalAddProject = document.querySelector(".modalAddProject");
+const arrowLeft = document.querySelector(".fa-arrow-left");
+
+/* Faire apparaître la seconde modale et ajout du retour à la première modale au click */
 function displayAddModal() {
-  btnAddModal.addEventListener("click" ,() => {
-    modalAddProject.style.display ="flex";
-    modalDeleteProject.style.display ="none";
-  })
-  arrowLeft.addEventListener("click", () =>{
+  btnAddModal.addEventListener("click", () => {
+    modalAddProject.style.display = "flex";
+    modalDeleteProject.style.display = "none";
+  });
+  arrowLeft.addEventListener("click", () => {
     modalAddProject.style.display = "none";
-    modalDeleteProject.style.display= "flex";
+    modalDeleteProject.style.display = "flex";
     resetAddProjectModal();
     displayModalProjects();
-  })
+  });
 }
 
-displayAddModal()
 
-/** Prévisualisation de l'image **/
+/* Prévisualisation de l'image */
+/* Variables */
 
-const previewImg = document.querySelector(".containerFile img")
-const inputFile = document.querySelector(".containerFile input")
-const labelFile = document.querySelector(".containerFile label")
-const iconFile = document.querySelector(".containerFile .fa-image")
-const pFile = document.querySelector(".containerFile p")
-const inputText = document.getElementById("title")
+const previewImg = document.querySelector(".containerFile img");
+const inputFile = document.querySelector(".containerFile input");
+const labelFile = document.querySelector(".containerFile label");
+const iconFile = document.querySelector(".containerFile .fa-image");
+const pFile = document.querySelector(".containerFile p");
+const inputText = document.getElementById("title");
 
-inputFile.addEventListener("change", ()=> {
-  const file = inputFile.files[0]
+/* Changer le visuel lorsqu'on ajoute un fichier  */
+inputFile.addEventListener("change", () => {
+  const file = inputFile.files[0];
   if (file) {
     const reader = new FileReader();
-    reader.onload = function (e){
-      previewImg.src = e.target.result
-      previewImg.style.display ="flex";
+    reader.onload = function (e) {
+      previewImg.src = e.target.result;
+      previewImg.style.display = "flex";
       labelFile.style.display = "none";
       iconFile.style.display = "none";
-      pFile.style.display ="none";
-    }
+      pFile.style.display = "none";
+    };
     reader.readAsDataURL(file);
   }
-})
+});
 
+/* Reset de la modale "ajout" */
 function resetAddProjectModal() {
-  previewImg.src= "";
+  previewImg.src = "";
   previewImg.style.display = "none";
   labelFile.style.display = "flex";
   iconFile.style.display = "flex";
-  pFile.style.display ="flex";
+  pFile.style.display = "flex";
   inputText.value = "";
   inputFile.value = "";
-  addErrorMessage.textContent="";
+  addErrorMessage.textContent = "";
   submitButton.classList.remove("active");
 }
 
+/* Créer la liste de catégorie */
 
-/* créer la liste de catégorie */
-
-async function displayCategoryModal () {
-  const select = document.querySelector(".modalAddProject select")
-  const categorys = await getCategories()
-  categorys.forEach(category => {
-    const option = document.createElement("option")
-    option.value = category.id
-    option.textContent = category.name
-    select.appendChild(option)
-  })
+async function displayCategoryModal() {
+  const select = document.querySelector(".modalAddProject select");
+  const categorys = await getCategories();
+  select.innerHTML ="";
+  categorys.forEach((category) => {
+    const option = document.createElement("option");
+    option.value = category.id;
+    option.textContent = category.name;
+    select.appendChild(option);
+  });
 }
 
-displayCategoryModal()
-
-
-
-
-/* faire un post pour ajouter un projet */
+/* Faire un post pour ajouter un projet */
+/* Variables */
 
 const form = document.querySelector(".modalAddProject form");
 const title = document.querySelector(".modalAddProject #title");
 const category = document.querySelector(".modalAddProject #category");
-const submitButton = document.querySelector(".validateButton")
-const addErrorMessage = document.querySelector(".modalAddProject .errorMessage")
+const submitButton = document.querySelector(".validateButton");
+const addErrorMessage = document.querySelector(".modalAddProject .errorMessage");
 
-// Fonction pour vérifier si le formulaire est complet
+/* Vérifier si le formulaire est complet */
 function isFormComplete() {
-  return title.value.trim() !== "" && category.value.trim() !== "" && inputFile.files.length > 0;
+  return (
+    title.value.trim() !== "" &&
+    category.value.trim() !== "" &&
+    inputFile.files.length > 0
+  );
 }
 
-// Événement change pour les champs du formulaire
-form.addEventListener("change", () => {
+/* Mettre à jour le bouton "Valider" */
+function updateSubmitButton() {
   if (isFormComplete()) {
     submitButton.classList.add("active");
-    addErrorMessage.textContent="";
+    addErrorMessage.textContent = "";
   } else {
     submitButton.classList.remove("active");
   }
-});
+}
 
+/* Ecouter le changement du formulaire */
+form.addEventListener("change", updateSubmitButton);
+
+/* POST pour l'ajout d'un projet lorsqu'on soumet le formulaire*/
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   const formData = new FormData(form);
@@ -209,10 +228,10 @@ form.addEventListener("submit", async (e) => {
   })
     .then((response) => {
       if (!response.ok) {
-        addErrorMessage.textContent="Veuillez remplir tous les champs du formulaire."
+        addErrorMessage.textContent = "Veuillez remplir tous les champs du formulaire.";
         throw new Error("La requête a échoué : " + response.status);
       }
-      addErrorMessage.textContent="";
+      addErrorMessage.textContent = "";
       return response.json();
     })
     .then((data) => {
@@ -220,7 +239,7 @@ form.addEventListener("submit", async (e) => {
       closeModal();
     })
     .catch((error) => {
-      console.error("Une erreur est survenue lors de l'envoi du formulaire :", error);
+      console.error("Une erreur est survenue lors de l'envoi du formulaire :", error
+      );
     });
 });
-

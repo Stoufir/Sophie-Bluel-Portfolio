@@ -247,7 +247,7 @@ nav .active {
 	cursor: pointer;
 }
 
-.filters .active-button {
+.filters .activeButton {
 	background-color: #1D6154;
 	color: white;
 }
@@ -381,6 +381,10 @@ ul li a {
 	justify-content: center;
 }
 
+.projectTitle h2 {
+	padding-bottom: 1em;
+}
+
 
 .projectTitle a {
 	text-decoration: none;
@@ -429,6 +433,7 @@ ul li a {
 	background-color: transparent;
 	border: none;
 	align-self: flex-end;
+	cursor: pointer;
 }
 
 .modal h2 {
@@ -440,7 +445,7 @@ ul li a {
 	padding: 30px;
 }
 
-.modal-gallery {
+.modalGallery {
 	width: 420px;
 	display: grid;
 	grid-template-columns: repeat(5, 76px);
@@ -451,13 +456,13 @@ ul li a {
 	grid-row-gap: 30px;
 }
 
-.modal-gallery img {
+.modalGallery img {
 	width: 100%;
 	margin: 0;
 	padding: 0;
 }
 
-.modal-button {
+.modalButton {
 	font-family: 'Syne';
 	font-weight: 700;
 	color: white;
@@ -480,11 +485,11 @@ ul li a {
 	margin-bottom: 20px;
 }
 
-.project-container {
+.projectContainer {
 	position: relative;
 }
 
-.delete-button {
+.deleteButton {
 	position: absolute;
 	top: 5px;
 	right: 5px;
@@ -499,7 +504,7 @@ ul li a {
 	cursor: pointer;
 }
 
-.trash-icon {
+.trashIcon {
 	color: white;
 	font-size: 11px;
 }
@@ -535,6 +540,10 @@ ul li a {
 	gap: 10px;
 }
 
+.fa-arrow-left {
+	cursor: pointer;
+}
+
 .containerFile {
 	background-color: #E8F1F6;
 	display: flex;
@@ -555,6 +564,7 @@ ul li a {
 	padding: 10px 50px;
 	border-radius: 50px;
 	color: #306685;
+	cursor: pointer;
 }
 
 .containerFile input {
