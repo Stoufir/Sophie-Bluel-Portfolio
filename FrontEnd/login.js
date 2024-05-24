@@ -1,4 +1,4 @@
-/*** Global variables ***/
+/* Variables */
 const url = "http://localhost:5678/";
 const emailInput = document.querySelector("form #email");
 const passwordInput = document.querySelector("form #password");
@@ -6,13 +6,13 @@ const form = document.querySelector(".login form");
 const loginErrorMessage = document.querySelector(".login p");
 
 
-
+/* Ecouter la soumission du formulaire pour connecter l'utilisateur */
 form.addEventListener('submit', function(event){
     event.preventDefault();
     getUsers();
 })
 
-
+/* Envoyer une requête POST pour connecter l'utilisateur */
 async function getUsers() { 
     const body = JSON.stringify ({email: email.value, password: password.value})
     fetch(url + 'api/users/login', {
