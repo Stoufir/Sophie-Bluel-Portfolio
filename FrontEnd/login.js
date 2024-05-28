@@ -37,7 +37,19 @@ async function getUsers() {
 
 .catch (error => {
     console.error(error);
-    loginErrorMessage.textContent="Erreur dans l’identifiant ou le mot de passe."
+    findError();
 })
 
+}
+
+function findError () {
+    if (emailInput.value.trim() === "" && passwordInput.value.trim() === "") {
+        loginErrorMessage.textContent = "Veuillez renseigner tous les champs.";
+    } else if (emailInput.value.trim() === "") {
+        loginErrorMessage.textContent = "Veuillez renseigner le champ email.";
+    } else if (passwordInput.value.trim() === "") {
+        loginErrorMessage.textContent = "Veuillez renseigner le champ mot de passe.";
+    } else {
+        loginErrorMessage.textContent = "Erreur dans l’identifiant ou le mot de passe.";
+    }
 }
